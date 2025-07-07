@@ -1,7 +1,7 @@
 # Azure Provider
 provider "azurerm" {
   features {}
-  subscription_id = "5f25aa12-6aeb-4e63-9ded-f3d6777290f3"
+  subscription_id = var.subscription_id
 }
 
 # Resource Group
@@ -28,14 +28,13 @@ resource "azurerm_subnet" "subnet" {
 
 # Public IP
 resource "azurerm_public_ip" "public_ip" {
-  name                = "docker-vm-pip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Static"     
-  sku                 = "Standard"
+  name                    = "docker-vm-pip"
+  location                = azurerm_resource_group.rg.location
+  resource_group_name     = azurerm_resource_group.rg.name
+  allocation_method       = "Static"
+  sku                     = "Standard"
   idle_timeout_in_minutes = 4
 }
-
 
 # Network Security Group (open SSH and HTTP)
 resource "azurerm_network_security_group" "nsg" {
@@ -82,13 +81,13 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-# Associate NSG with NIC
+# Linux Virtual Machine
 resource "azurerm_linux_virtual_machine" "vm" {
   name                  = "docker-vm"
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   size                  = "Standard_B1s"
-  admin_username        = "azureuser"
+  admin_username        = var.admin_username
   computer_name         = "dockerhost"
   disable_password_authentication = true
 
@@ -97,7 +96,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   ]
 
   admin_ssh_key {
-    username   = "azureuser"
+    username   = var.admin_username
     public_key = var.ssh_public_key
   }
 
