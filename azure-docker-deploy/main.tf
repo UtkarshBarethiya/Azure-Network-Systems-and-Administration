@@ -83,12 +83,6 @@ resource "azurerm_network_interface" "nic" {
 }
 
 # Associate NSG with NIC
-resource "azurerm_network_interface_security_group_association" "nic_nsg" {
-  network_interface_id      = azurerm_network_interface.nic.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-# Virtual Machine with SSH login
 resource "azurerm_linux_virtual_machine" "vm" {
   name                  = "docker-vm"
   location              = azurerm_resource_group.rg.location
@@ -98,12 +92,14 @@ resource "azurerm_linux_virtual_machine" "vm" {
   computer_name         = "dockerhost"
   disable_password_authentication = true
 
+  network_interface_ids = [
+    azurerm_network_interface.nic.id,
+  ]
+
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("C:/Users/utkar/.ssh/id_rsa.pub") # 🔧 Make sure this file exists
+    public_key = var.ssh_public_key
   }
-
-  network_interface_ids = [azurerm_network_interface.nic.id]
 
   os_disk {
     caching              = "ReadWrite"
