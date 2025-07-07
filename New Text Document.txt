@@ -1,8 +1,0 @@
-# Ignore Terraform local files
-.terraform/
-terraform.exe
-terraform-provider-*.exe
-*.exe
-
-# Ignore POC folder and its contents
-POC/
