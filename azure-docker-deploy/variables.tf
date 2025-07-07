@@ -1,14 +1,14 @@
 variable "subscription_id" {
-  description = "Azure subscription ID"
   type        = string
+  description = "Azure subscription ID"
 }
 
 variable "admin_username" {
-  description = "Admin username for the VM"
   type        = string
+  description = "Admin username for VM"
 }
 
 variable "ssh_public_key" {
-  description = "SSH public key for authentication"
   type        = string
+  description = "SSH public key for VM authentication"
 }
