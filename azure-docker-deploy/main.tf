@@ -81,14 +81,20 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
+# ✅ NSG Association with NIC
+resource "azurerm_network_interface_security_group_association" "nic_nsg" {
+  network_interface_id      = azurerm_network_interface.nic.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
 # Linux Virtual Machine
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                  = "docker-vm"
-  location              = azurerm_resource_group.rg.location
-  resource_group_name   = azurerm_resource_group.rg.name
-  size                  = "Standard_B1s"
-  admin_username        = var.admin_username
-  computer_name         = "dockerhost"
+  name                            = "docker-vm"
+  location                        = azurerm_resource_group.rg.location
+  resource_group_name             = azurerm_resource_group.rg.name
+  size                            = "Standard_B1s"
+  admin_username                  = var.admin_username
+  computer_name                   = "dockerhost"
   disable_password_authentication = true
 
   network_interface_ids = [
